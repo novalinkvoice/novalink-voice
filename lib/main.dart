@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'phone.dart';
 import 'portal.dart';
+import 'screens/about_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'theme.dart';
 
-void main() => runApp(const NovaLinkVoiceApp());
+void main() {
+  registerAppLicenses();
+  runApp(const NovaLinkVoiceApp());
+}
 
 class NovaLinkVoiceApp extends StatelessWidget {
   const NovaLinkVoiceApp({super.key});

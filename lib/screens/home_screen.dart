@@ -5,6 +5,7 @@ import '../address_book.dart';
 import '../phone.dart';
 import '../portal.dart';
 import '../theme.dart';
+import 'about_screen.dart';
 import 'call_screen.dart';
 import 'dialpad.dart';
 import 'login_screen.dart';
@@ -82,6 +83,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       const SizedBox(height: 20),
       OutlinedButton.icon(icon: const Icon(Icons.refresh), label: const Text('Reconnect'),
           onPressed: () { p.refresh(); Navigator.pop(ctx); }),
+      const SizedBox(height: 8),
+      OutlinedButton.icon(icon: const Icon(Icons.info_outline), label: const Text('About NovaLink Voice'),
+          onPressed: () { Navigator.pop(ctx);
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AboutScreen())); }),
       const SizedBox(height: 8),
       OutlinedButton.icon(icon: const Icon(Icons.logout, color: NL.red),
           label: const Text('Sign out', style: TextStyle(color: NL.red)),

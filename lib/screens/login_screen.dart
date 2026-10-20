@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import '../phone.dart';
 import '../portal.dart';
 import '../theme.dart';
+import 'about_screen.dart';
 import 'home_screen.dart';
 
 /// Sign in with the NovaLink Voice portal email + password (+ MFA code if on).
@@ -112,6 +113,9 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 18),
             const Text("New to NovaLink Voice? Sign up at novalinkvoice.com",
                 style: TextStyle(color: Colors.white70)),
+            TextButton(
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AboutScreen())),
+                child: const Text('About · Source code', style: TextStyle(color: Colors.white70))),
           ]),
         ))),
       ),
