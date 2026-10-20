@@ -1,0 +1,71 @@
+# Linphone's CocoaPods specs live in their own repo; the trunk is still needed for plugins.
+source 'https://gitlab.linphone.org/BC/public/podspec.git'
+source 'https://cdn.cocoapods.org/'
+
+platform :ios, '15.0'
+
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
+end
+
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+flutter_ios_podfile_setup
+
+target 'Runner' do
+  use_frameworks!
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  # Same 5.4 line as the Android build (org.linphone:linphone-sdk-android:5.4.x).
+  pod 'linphone-sdk', '5.4.128'
+
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
+end
+
+# linphone-sdk vendors every XCFramework it builds, including its own test suites
+# (linphonetester, bctoolbox-tester, limetester...), which link a belle-sip tester
+# dylib the pod doesn't ship -> dyld kills the app at launch. Drop them before the
+# Pods project is generated.
+pre_install do |installer|
+  dir = File.join(installer.sandbox.root, 'linphone-sdk', 'linphone-sdk', 'apple-darwin', 'XCFrameworks')
+  Dir.glob(File.join(dir, '*tester*.xcframework')).each { |f| FileUtils.rm_rf(f) }
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+      # Flutter's simulator engine is arm64-only (Apple silicon); don't ask for Intel slices.
+      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'x86_64'
+      # permission_handler compiles each permission out unless switched on here;
+      # without these the mic/notification prompts silently return "denied".
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)']
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] += [
+        'PERMISSION_MICROPHONE=1',
+        'PERMISSION_NOTIFICATIONS=1',
+      ]
+    end
+  end
+end

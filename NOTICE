@@ -1,0 +1,31 @@
+NovaLink Voice
+Copyright (C) 2026 APEX Business Consultants LLC
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version. See the LICENSE file for the full text.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+--------------------------------------------------------------------------------
+Third-party software
+--------------------------------------------------------------------------------
+
+Linphone SDK (liblinphone, mediastreamer2, belle-sip, ortp, bctoolbox and the
+other components distributed in linphone-sdk)
+  Copyright (C) Belledonne Communications SARL
+  https://www.linphone.org/ - https://gitlab.linphone.org/BC/public/linphone-sdk
+  Licensed under the GNU Affero General Public License v3.0.
+  Used unmodified: org.linphone:linphone-sdk-android 5.4.0 (Android) and the
+  linphone-sdk 5.4.128 CocoaPod (iOS). Source code for these versions is
+  available from the URL above.
+
+Flutter and Dart packages
+  Each package listed in pubspec.yaml / pubspec.lock is distributed under its own
+  license, which is included with the package.
+
+Let's Encrypt root certificates (android/app/src/main/assets/le-roots.pem)
+  Public root certificates of the Internet Security Research Group.
